@@ -1,53 +1,53 @@
 #include <iostream>
-using namespace std;
 
-class Animal {
+//statyczny
+class Calculator {
 public:
-    virtual void makeSound() {
-        cout << "Undefined" << endl;
+    int add(int a, int b) {
+        return a + b;
     }
-    virtual ~Animal() {}
+
+    double add(double a, double b) {
+        return a + b;
+    }
 };
 
-class Cat : public Animal {
+//dynamiczny
+class Animal { //abstract
 public:
-    void makeSound() override {
-        cout << "Meow!" << endl;
-    }
+    virtual ~Animal() = default;
+    virtual void speak() const = 0;
 };
 
 class Dog : public Animal {
 public:
-    void makeSound() override {
-        cout << "Bark bark!" << endl;
+    void speak() const override {
+        std::cout << "Hau hau!" << std::endl;
+    }
+};
+
+class Cat : public Animal {
+public:
+    void speak() const override {
+        std::cout << "Miau miau!" << std::endl;
     }
 };
 
 int main() {
-    // Static polymorphism
-    Animal* animals[2];
-    animals[0] = new Cat();
-    animals[1] = new Dog();
+    std::cout << "Polimorfizm statyczny" << std::endl;
+    Calculator calc;
+    std::cout << "Suma int: " << calc.add(5, 10) << std::endl;
+    std::cout << "Suma double: " << calc.add(3.5, 2.1) << std::endl;
 
-    for (Animal* animal : animals) {
-        animal->makeSound();
-    }
+    std::cout << "\nPolimorfizm dynamiczny" << std::endl;
+    Dog dog;
+    Cat cat;
 
-    // Dynamic polymorphism
-    Animal* animal = new Cat();
-    animal->makeSound();
+    Animal* animal1 = &dog;
+    Animal* animal2 = &cat;
 
-    Dog* dog = dynamic_cast<Dog*>(animal);
-    if (dog == nullptr) {
-        cout << "Failed to cast object to Dog" << endl;
-    }
-    else {
-        dog->makeSound();
-    }
-
-    delete animals[0];
-    delete animals[1];
-    delete animal;
+    animal1->speak();
+    animal2->speak();
 
     return 0;
 }
